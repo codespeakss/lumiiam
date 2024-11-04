@@ -11,6 +11,11 @@ type PostTokenReq struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type ValidateTokenResp struct {
+	Id       string `json:"id" binding:"required"`
+	Username string `json:"username" `
+}
+
 var userDB = map[string]string{
 	"admin": "password",
 }
@@ -122,9 +127,12 @@ func PostValidateToken(c *gin.Context) {
 	// 验证 token
 	if isValidToken(req.Token) {
 		c.JSON(http.StatusOK, api.HttpResp{
-			Code:   200,
-			Msg:    "Token 有效",
-			Data:   nil,
+			Code: 200,
+			Msg:  "Token 有效",
+			Data: ValidateTokenResp{
+				Id:       "id001",
+				Username: "John Bush",
+			},
 			Total:  0,
 			Errors: nil,
 		})
