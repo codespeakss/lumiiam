@@ -103,7 +103,6 @@
                 const token = resp.data.token; // 获取 token
                 const timeout = resp.data.timeout;
 
-                // 将 token 写入 cookie，设置有效期为 7 天
                 const expires = new Date(Date.now() + timeout * 1000).toUTCString(); // timeout 秒后过期
                 document.cookie = `token=${token}; expires=${expires}; path=/;`;
 

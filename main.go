@@ -41,7 +41,7 @@ func PostToken(c *gin.Context) {
 			c.JSON(http.StatusOK, api.HttpResp{
 				Code:   200,
 				Msg:    "登录成功",
-				Data:   map[string]string{"token": DefaultValidToken, "timeout": "3600"}, // 将 token 放入 Data 字段
+				Data:   map[string]string{"token": DefaultValidToken, "timeout": "60"}, // 将 token 放入 Data 字段
 				Total:  0,
 				Errors: nil,
 			})
