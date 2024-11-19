@@ -12,9 +12,24 @@ function getInitials(name) {
         }
     }
 }
+function setCookie(name, value, options = {}) {
+    let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+    if (options.expires) {
+        cookieString += `; expires=${options.expires}`;
+    }
+    if (options.path) {
+        cookieString += `; path=${options.path}`;
+    }
+    if (options.secure) {
+        cookieString += `; Secure`;
+    }
+    if (options.sameSite) {
+        cookieString += `; SameSite=${options.sameSite}`;
+    }
+    document.cookie = cookieString;
+}
 
 function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    const match = document.cookie.match(`(?:^|; )${encodeURIComponent(name)}=([^;]*)`);
+    return match ? decodeURIComponent(match[1]) : null;
 }

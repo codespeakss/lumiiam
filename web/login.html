@@ -7,6 +7,7 @@
     <link rel="icon" href="assets/images/owl.svg" type="image/svg+xml">
     <link rel="stylesheet" href="css/styles_login.css">
     <link rel="stylesheet" href="css/styles_footer.css">
+    <script src="js/iam.js"></script>
 </head>
 <body>
 <div class="container">
@@ -59,14 +60,40 @@
                 const data = await handleResponse(response);
 
                 if (data) {
-                    const { refresh_token, access_token, expires_at } = data;
+                    const { refresh_token, access_token, expires_at } = data || {};
+
+                    // 验证数据是否完整
+                    if (!refresh_token || !access_token || !expires_at) {
+                        console.error('Invalid token data:', data);
+                        return;
+                    }
+
                     const expires = new Date(expires_at).toUTCString();
+                    console.log('refresh_token:', refresh_token);
+                    console.log('access_token:', access_token);
 
                     // 设置安全 Cookie
-                    document.cookie = `refresh_token=${refresh_token}; Secure; HttpOnly; SameSite=Strict; path=/; expires=${expires}`;
-                    document.cookie = `access_token=${access_token}; Secure; HttpOnly; SameSite=Strict; path=/; expires=${expires}`;
+                    setCookie('refresh_token', refresh_token, {
+                        expires,
+                        path: '/',
+                        secure: true,
+                        sameSite: 'Strict',
+                    });
+                    setCookie('access_token', access_token, {
+                        expires,
+                        path: '/',
+                        secure: true,
+                        sameSite: 'Strict',
+                    });
 
-                    window.location.href = 'index.html';
+                    // 检查是否已设置 refresh_token
+                    const refreshToken = getCookie('refresh_token');
+                    if (!refreshToken) {
+                        console.warn('User not logged in. Redirecting to login page.');
+                        window.location.href = 'login.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
                 }
             } catch (error) {
                 alert('网络异常，请检查您的网络连接。');

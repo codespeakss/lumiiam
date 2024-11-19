@@ -18,41 +18,60 @@
 
             setTimeout(function() {
                 toast.classList.remove("show");
-            }, 3000); // Toast will disappear after 3 seconds
+            }, 5000); // Toast will disappear after 3 seconds
         }
 
         async function checkToken() {
             try {
-                const token = getCookie('refresh_token');
+                const token = getCookie('refresh_token'); // 从 Cookie 中获取 refresh_token
+                console.log('getCookie token:', token);
+
+                if (!token) {
+                    showToast('Token not found! Redirecting to login.');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 5000);
+                    return;
+                }
+
                 const response = await fetch('/iam/api/v1/tokens/validate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}` // 使用 Bearer token 进行授权
                     },
-                    body: JSON.stringify({ token: token }) // 发送 token
+                    body: JSON.stringify({ token }) // 发送 token
                 });
 
                 if (!response.ok) {
-                    showToast('Session expired or invalid token!');
+                    const errorMessage = await response.text(); // 捕获服务端返回的错误消息
+                    console.error('Token validation failed:', errorMessage);
+                    showToast('Session expired or invalid token! Redirecting to login.');
                     setTimeout(() => {
-                        window.location.href = 'login.html'; // 5秒后跳转到登录页
-                    }, 5000);
+                        window.location.href = 'login.html';
+                    }, 20000);
+                    return;
                 }
+
+                const json = await response.json();
+                console.log('response.json data:', json);
+                const name = json.data.name; // 从响应中提取用户名
+
+                if (!name) {
+                    throw new Error('Invalid server response: Missing name');
+                }
+
+                const shortName = getInitials(name); // 使用辅助函数生成缩写
+                document.getElementById('user-initials').textContent = shortName; // 更新页面显示
             } catch (error) {
                 console.error('检查 token 时出错:', error);
-                showToast('检查 token 时出错');
+                showToast('Error checking token. Redirecting to login.');
                 setTimeout(() => {
                     window.location.href = 'login.html'; // 在出现错误时也跳转
                 }, 20000);
-
             }
-
-            // load user info
-            const userName = "John Doe";  // 可更改为 "John Doe" 测试英文支持
-            const shortName = getInitials(userName);
-            document.getElementById('user-initials').textContent = shortName;
         }
+
 
         window.onload = checkToken;
     </script>
@@ -65,7 +84,7 @@
         <h1>欢迎来到主页面</h1>
         <p>这是用户登录后看到的内容。</p>
     </div>
-<!--    <div id="toast" class="toast">This is a toast message</div>-->
+    <div id="toast" class="toast">This is a toast message</div>
     <footer class="footer">
         <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备2024094052号</a>
     </footer>

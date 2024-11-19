@@ -8,6 +8,7 @@ import (
 	"lumiiam/internal/repo"
 	"lumiiam/pkg/cache"
 	"lumiiam/pkg/util"
+	"strings"
 	"time"
 )
 
@@ -35,13 +36,13 @@ func (s *TokenService) CreateToken(item *api.PostTokenReq) (*api.PostTokenResp, 
 			return nil, fmt.Errorf("")
 		}
 
-		e = s.redis.Set(refreshToken, userInfo.Id, config.RefreshTokenTimeoutSecond*time.Second)
+		e = s.redis.Set(refreshToken, userInfo.Id+", "+userInfo.Name, config.RefreshTokenTimeoutSecond*time.Second)
 
 		accessToken, e := util.GenerateToken()
 		if e != nil {
 			return nil, fmt.Errorf("")
 		}
-		e = s.redis.Set(accessToken, userInfo.Id, config.AccessTokenTimeoutSecond*time.Second)
+		e = s.redis.Set(accessToken, userInfo.Id+", "+userInfo.Name, config.AccessTokenTimeoutSecond*time.Second)
 
 		return &api.PostTokenResp{
 			RefreshToken: refreshToken,
@@ -53,15 +54,24 @@ func (s *TokenService) CreateToken(item *api.PostTokenReq) (*api.PostTokenResp, 
 
 	return nil, e
 }
-
 func (s *TokenService) GetTokenInfo(tokenReq *api.ValidateTokenReq) (*api.ValidateTokenResp, error) {
-	userId, ok := s.redis.Get(tokenReq.Token)
-	if ok {
-		return &api.ValidateTokenResp{
-			Id:   userId,
-			Name: "",
-		}, nil
+	// 从 Redis 获取 token 对应的值
+	userInfo, ok := s.redis.Get(tokenReq.Token)
+	if !ok {
+		return nil, fmt.Errorf("token not found or expired")
 	}
 
-	return nil, fmt.Errorf("s.redis.Get !ok ")
+	// 解析 Redis 存储的用户信息，格式为 "userId, userName"
+	parts := strings.SplitN(userInfo, ", ", 2)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("invalid userInfo format in Redis")
+	}
+
+	userId := parts[0]
+	userName := parts[1]
+
+	return &api.ValidateTokenResp{
+		Id:   userId,
+		Name: userName,
+	}, nil
 }

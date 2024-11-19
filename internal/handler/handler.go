@@ -44,8 +44,4 @@ func (h *Handler) RegisterRoutes(r *gin.Engine) {
 		tokenV1.GET("", h.GetToken)
 		tokenV1.POST("/validate", h.PostValidateToken)
 	}
-
-	//router.POST("/api/v1/tokens", handler.PostToken)
-	//router.GET("/api/v1/tokens", handler.GetToken)
-	//router.POST("/api/v1/tokens/validate", handler.PostValidateToken)
 }
