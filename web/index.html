@@ -6,21 +6,12 @@
     <title>分布式任务协同 - 云平台</title>
     <link rel="icon" href="assets/images/owl.svg" type="image/svg+xml">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/styles_iam.css">
-    <link rel="stylesheet" href="css/styles_toast.css">
-    <link rel="stylesheet" href="css/styles_footer.css">
+    <link rel="stylesheet" href="css/iam.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/footer.css">
     <script src="js/iam.js"></script>
+    <script src="js/toast.js"></script>
     <script>
-        function showToast(message) {
-            var toast = document.getElementById("toast");
-            toast.textContent = message; // Update toast message
-            toast.classList.add("show");
-
-            setTimeout(function() {
-                toast.classList.remove("show");
-            }, 5000); // Toast will disappear after 3 seconds
-        }
-
         async function checkToken() {
             try {
                 const token = getCookie('refresh_token'); // 从 Cookie 中获取 refresh_token
@@ -71,7 +62,6 @@
                 }, 20000);
             }
         }
-
 
         window.onload = checkToken;
     </script>
