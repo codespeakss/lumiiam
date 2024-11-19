@@ -1,0 +1,13 @@
+/* Footer styling for centered text at the bottom */
+.footer {
+    position: fixed; /* 固定位置 */
+    bottom: 0; /* 贴近页面底部 */
+    left: 0; /* 确保水平居中对齐的起点 */
+    width: 100%; /* 占满宽度以确保水平居中 */
+    text-align: center; /* 文本居中 */
+    padding: 10px;
+    font-size: 14px;
+    background-color: #f8f9fa; /* 背景颜色 */
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* 可选：为底部增加阴影效果 */
+    z-index: 1000; /* 确保它在其他内容之上 */
+}
