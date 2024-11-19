@@ -18,7 +18,6 @@ func init() {
 	//var e error
 
 	log.Println("Current GOMAXPROCS: ", runtime.GOMAXPROCS(0))
-
 }
 
 const Port = ":8011"

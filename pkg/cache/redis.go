@@ -45,6 +45,11 @@ func (rts *RedisTokenStore) Get(token string) (string, bool) {
 	return userID, true
 }
 
+// 删除指定的 token
+func (rts *RedisTokenStore) Delete(token string) error {
+	return rts.client.Del(ctx, token).Err()
+}
+
 func (rts *RedisTokenStore) Demo() {
 	// 设置 token
 	err := rts.Set("token123", "user123", 2*time.Minute)

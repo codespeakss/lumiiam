@@ -6,10 +6,6 @@ import (
 	"net/http"
 )
 
-//var userDB = map[string]string{
-//	"admin": "password",
-//}
-
 func (h *Handler) PostToken(c *gin.Context) {
 	var postTokenReq api.PostTokenReq
 	if err := c.ShouldBindJSON(&postTokenReq); err != nil {
@@ -46,6 +42,48 @@ func (h *Handler) PostToken(c *gin.Context) {
 
 func (h *Handler) GetToken(c *gin.Context) {
 
+}
+
+func (h *Handler) DeleteToken(c *gin.Context) {
+	var req api.DeleteTokenReq
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, api.HttpResp{
+			Code:  400,
+			Msg:   "请求参数错误",
+			Data:  nil,
+			Total: 0,
+			Errors: []api.ErrorDetail{
+				api.ErrorDetail{
+					Msg: err.Error(),
+				},
+			},
+		})
+		return
+	}
+
+	err := h.tokenService.DeleteToken(&req)
+	if err != nil {
+		c.JSON(http.StatusNotImplemented, api.HttpResp{
+			Code:  401,
+			Msg:   "Token 无效",
+			Data:  nil,
+			Total: 0,
+			Errors: []api.ErrorDetail{
+				api.ErrorDetail{
+					Msg: err.Error(),
+				},
+			},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, api.HttpResp{
+		Code:   200,
+		Total:  0,
+		Errors: nil,
+	})
+	return
 }
 
 func (h *Handler) PostValidateToken(c *gin.Context) {

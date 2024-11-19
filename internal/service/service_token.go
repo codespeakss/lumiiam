@@ -54,6 +54,7 @@ func (s *TokenService) CreateToken(item *api.PostTokenReq) (*api.PostTokenResp, 
 
 	return nil, e
 }
+
 func (s *TokenService) GetTokenInfo(tokenReq *api.ValidateTokenReq) (*api.ValidateTokenResp, error) {
 	// 从 Redis 获取 token 对应的值
 	userInfo, ok := s.redis.Get(tokenReq.Token)
@@ -74,4 +75,14 @@ func (s *TokenService) GetTokenInfo(tokenReq *api.ValidateTokenReq) (*api.Valida
 		Id:   userId,
 		Name: userName,
 	}, nil
+}
+
+func (s *TokenService) DeleteToken(item *api.DeleteTokenReq) error {
+	err := s.redis.Delete(item.Token)
+
+	if err != nil {
+		return fmt.Errorf("s.redis.Delete : %w", err)
+	}
+
+	return nil
 }

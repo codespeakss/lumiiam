@@ -1,5 +1,5 @@
 // toast.js
-export function showToast(message, duration = 5000) {
+function showToast(message, duration = 5000) {
     const toast = document.getElementById("toast");
     if (!toast) {
         console.error("Toast element not found!");

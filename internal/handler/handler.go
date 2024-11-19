@@ -42,6 +42,7 @@ func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	{
 		tokenV1.POST("", h.PostToken)
 		tokenV1.GET("", h.GetToken)
+		tokenV1.DELETE("", h.DeleteToken)
 		tokenV1.POST("/validate", h.PostValidateToken)
 	}
 }

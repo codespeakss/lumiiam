@@ -19,3 +19,7 @@ type ValidateTokenResp struct {
 	Id   string `json:"id" binding:"required"`
 	Name string `json:"name" `
 }
+
+type DeleteTokenReq struct {
+	Token string `json:"token" binding:"required"`
+}
