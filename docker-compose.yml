@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lumiiam-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lumiiam
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lumiiam:latest
+    container_name: lumiiam-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      app_port: 8080
+      app_env: prod
+      pg_host: postgres
+      pg_port: 5432
+      pg_user: postgres
+      pg_password: postgres
+      pg_db: lumiiam
+      pg_sslmode: disable
+      access_token_ttl_minutes: 15
+      refresh_token_ttl_days: 7
+      password_bcrypt_cost: 12
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

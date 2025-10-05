@@ -1,0 +1,17 @@
+# binaries
+/bin/
+/dist/
+/build/
+
+# dependencies
+/vendor/
+
+go.sum
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# env
+.env

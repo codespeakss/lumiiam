@@ -1,0 +1,16 @@
+# Go build
+/bin
+/build
+/dist
+
+# git/ide
+.git
+.vscode
+.idea
+.DS_Store
+
+# node
+node_modules
+
+# env
+.env

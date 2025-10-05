@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lumiiam:latest
+    container_name: lumiiam-app
+    environment:
+      app_port: 8080
+      app_env: prod
+      # connect to an already running postgres container on the host
+      pg_host: host.docker.internal
+      pg_port: 5432
+      pg_user: admin
+      pg_password: randompass
+      pg_db: diam
+      pg_sslmode: disable
+      access_token_ttl_minutes: 15
+      refresh_token_ttl_days: 7
+      password_bcrypt_cost: 12
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
