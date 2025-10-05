@@ -38,6 +38,7 @@ func New(cfg *config.Config, db *gorm.DB) *gin.Engine {
 		api.POST("/auth/logout", auth_mw.RequireAuth(), auth_h.PostLogout)
 
 		// user endpoints
+		api.POST("/users", user_h.PostUser)
 		api.GET("/users/me", auth_mw.RequireAuth(), user_h.GetMe)
 		api.GET("/users", auth_mw.RequireAuth(), user_h.GetUsers)
 	}

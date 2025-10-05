@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lumiiam web tests</title>
+  <style>
+    body { font-family: system-ui; margin: 32px; }
+    .summary { margin-bottom: 16px; }
+    .ok { color: #0a0; }
+    .fail { color: #c00; }
+    .case { margin: 8px 0; }
+    pre { background: #f6f8fa; padding: 8px; border-radius: 6px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h2>lumiiam web tests</h2>
+  <div class="summary">
+    <button id="run">Run Tests</button>
+    <span id="status"></span>
+  </div>
+  <div id="results"></div>
+  <script type="module" src="/test.js"></script>
+</body>
+</html>

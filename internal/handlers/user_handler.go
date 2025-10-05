@@ -12,6 +12,30 @@ type UserHandler struct { users *services.UserService }
 
 func NewUserHandler(users *services.UserService) *UserHandler { return &UserHandler{users: users} }
 
+// PostUser creates a new user
+func (h *UserHandler) PostUser(c *gin.Context) {
+	type req struct {
+		Email    string `json:"email"`
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	var body req
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid body"})
+		return
+	}
+	if body.Email == "" || body.Username == "" || body.Password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "missing fields"})
+		return
+	}
+	u, err := h.users.Create(body.Email, body.Username, body.Password)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, u)
+}
+
 func (h *UserHandler) GetMe(c *gin.Context) {
 	uid := c.GetUint("user_id")
 	u, err := h.users.GetByID(uid)

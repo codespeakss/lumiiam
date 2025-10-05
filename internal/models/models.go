@@ -54,13 +54,13 @@ const (
 )
 
 type Token struct {
-	ID         uint       `gorm:"primaryKey" json:"id"`
-	UserID     uint       `gorm:"index" json:"user_id"`
-	Kind       TokenKind  `gorm:"size:16;index" json:"kind"`
-	Hash       string     `gorm:"size:128;index" json:"-"`
-	ExpiresAt  time.Time  `gorm:"index" json:"expires_at"`
-	RevokedAt  sql.NullTime `json:"revoked_at"`
-	CreatedAt  time.Time  `json:"created_at"`
+	ID        uint         `gorm:"primaryKey" json:"id"`
+	UserID    uint         `gorm:"index" json:"user_id"`
+	Kind      TokenKind    `gorm:"size:16;index" json:"kind"`
+	Hash      string       `gorm:"size:128;index" json:"-"`
+	ExpiresAt time.Time    `gorm:"index" json:"expires_at"`
+	RevokedAt sql.NullTime `json:"revoked_at"`
+	CreatedAt time.Time    `json:"created_at"`
 }
 
 func CreateUser(db *gorm.DB, email, username, password string) error {
